@@ -7,7 +7,7 @@ $opdrachtNamen = array(
 
 include 'db.php';
         
-// Maak een verbinding met de database
+// Maak een verbinding met database
  $conn = getConnection();
 
 $message = "";
