@@ -123,7 +123,7 @@
             <ul>
                 <li><a href="#">Uren invullen</a></li>
                 <li><a href="#">Werkzaamheden</a></li>
-                <li><a href="index.html">Medewerkers</a></li>
+                <li><a href="#">Medewerkers</a></li>
                 <li><a href="#">Opdrachten</a></li>
                 <li><a href="#">Klanten</a></li>
             </ul>
