@@ -1,9 +1,9 @@
 <?php
 // Database credentials
 $servername = "localhost";
-$username = "root";
+$username = "";
 $password = "";
-$dbname = "erp_systeem";
+$dbname = "";
 
 // Create connection
 function getConnection() {
@@ -12,7 +12,8 @@ function getConnection() {
   
   // Check connection
   if ($conn->connect_error) {
-    die("Connection failed: 1" . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error); // Removed the extra '1'
   }
   return $conn;
 }
+?>
