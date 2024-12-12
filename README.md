@@ -1,7 +1,6 @@
 # ERP-Systeem
 
 Deze repro bewaart de up to date versie van het ERP-Systeem, In deze readme staan de volgende punten benoemd:
-- Waarvoor is dit?
 - Requirments installatie.
 - Installatie.
 
