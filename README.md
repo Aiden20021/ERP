@@ -11,10 +11,9 @@ Deze repro bewaart de up to date versie van het ERP-Systeem, In deze readme staa
 ```bash
     git clone https://github.com/Aiden20021/ERP.git
 ```
-### 2. Ga naar de project folder
-```bash
-    cd DigitalSignage-client
-```
+### 2. Ga naar de project folder,
+In de project folder ERP/ERP-Code staan de site gegevens, de root van het github repro bevat de example database.
+Deze worden later handmatig op apache2 geïnstalleerd.
 ### 3. Installeer de benodigde dependencies:
 ```bash
     sudo apt-get update && sudo apt-get upgrade -y
