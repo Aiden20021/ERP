@@ -166,7 +166,7 @@ $mpdf->WriteHTML('
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url("siuu.jpg"); /* Voeg hier het pad naar je afbeelding in */
+            background-image: url("manger.jpg"); /* Voeg hier het pad naar je afbeelding in */
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;

@@ -19,7 +19,7 @@ if(!isset($_SESSION['admin_name'])){
    <title>manager pagina</title>
 
    <!-- custom css file link  -->
-   <link rel="stylesheet" href="siu.css">
+   <link rel="stylesheet" href="admin.css">
 
    <style>
       body {

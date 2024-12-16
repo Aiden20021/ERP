@@ -7,7 +7,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url("siuu.jpg");
+            background-image: url("manger.jpg");
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
