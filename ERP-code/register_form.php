@@ -1,10 +1,19 @@
 <?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd
+if (!isset($_SESSION['admin_name'])) {
+    header('location:login_form.php');
+    exit();
+}
+?>
+
+<?php
 @include 'db.php'; 
 
 // Maak een verbinding met de database
 $conn = getConnection();
 
-session_start();
 
 if (isset($_POST['submit'])) {
    $gebruiksnaam = mysqli_real_escape_string($conn, $_POST['gebruiksnaam']);

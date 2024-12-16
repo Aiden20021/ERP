@@ -1,4 +1,14 @@
 <?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd
+if (!isset($_SESSION['admin_name'])) {
+    header('location:login_form.php');
+    exit();
+}
+?>
+
+<?php
 require_once __DIR__ . '/vendor/autoload.php'; // Het pad naar de mpdf-bibliotheek
 
 use Mpdf\Mpdf;
@@ -166,8 +176,8 @@ $mpdf->WriteHTML('
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url("manger.jpg"); /* Voeg hier het pad naar je afbeelding in */
-            background-size: cover;
+            background-image: url("manger.jpg");
+             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
             background-color: #bb278a;

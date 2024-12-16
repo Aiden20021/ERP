@@ -1,4 +1,14 @@
 <?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd
+if (!isset($_SESSION['admin_name'])) {
+    header('location:login_form.php');
+    exit();
+}
+?>
+
+<?php
 $opdrachtNamen = array(
     "opdracht1" => "Server fixen",
     "opdracht2" => "Server bouwen",

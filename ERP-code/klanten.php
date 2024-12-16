@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd
+if (!isset($_SESSION['admin_name'])) {
+    header('location:login_form.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -188,6 +198,7 @@
     <?php
         include 'db.php';
         
+
        // Maak een verbinding met de database
         $conn = getConnection();
         
@@ -293,8 +304,10 @@
             echo "Geen klantgegevens gevonden.";
         }
         
+        
         // Sluit de verbinding met de MySQL-server
         $conn->close();
+        
     ?>
 </body>
 </html>

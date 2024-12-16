@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd
+if (!isset($_SESSION['admin_name'])) {
+    header('location:login_form.php');
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,8 +17,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url("manger.jpg");
-            background-size: cover;
+            background-image: url("manger.jpg");            background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
             background-color: #00fffb; 
