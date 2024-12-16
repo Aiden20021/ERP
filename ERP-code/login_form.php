@@ -3,6 +3,7 @@
 
 session_start();
 
+
 // Maak een verbinding met de database
 $conn = getConnection();
 
@@ -28,6 +29,8 @@ if (isset($_POST['submit'])) {
     } else {
         $error[] = 'Onjuiste gebruiksnaam of wachtwoord!';
     }
+    header("Location: login.php");
+    exit;
 }
 ?>
 
