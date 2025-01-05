@@ -1,11 +1,6 @@
 <?php
-
-@include 'db.php';
-
 session_start();
-session_unset();
-session_destroy();
 
+// Stuur de gebruiker terug naar de inlogpagina
 header('location:login_form.php');
-
 ?>
