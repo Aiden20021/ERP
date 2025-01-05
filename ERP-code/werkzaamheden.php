@@ -6,11 +6,8 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
     header('location:index.html'); 
     exit();
 }
-?>
 
-<?php
 require_once __DIR__ . '/vendor/autoload.php'; // Het pad naar de mpdf-bibliotheek
-
 use Mpdf\Mpdf;
 
 // Controleer of de "pdf" parameter aanwezig is in de URL
@@ -42,77 +39,68 @@ if (isset($_GET['pdf'])) {
     // Genereer de PDF met de gegevens van de geselecteerde rij
     $mpdf = new Mpdf();
 
-$mpdf->WriteHTML('
-<style>
-@page {
-    header: html_Urenregistraties;
-    footer: html_Footer;
-    margin-top: ;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 0; /* Voeg deze regel toe om de ondermarge te verwijderen */
-}
-#black-bar {
-    background-color: #999;
-    width: 100vw;
-    height: 120px;
-    text-align: center;
-    color: #fff;
-    line-height: 120px;
-    font-size: 18px;
-    position: absolute;
-    top: -120px; /* Verander de waarde naar -120px om de balk naar boven te verplaatsen */
-    left: 0;
-}
-#header-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background-color: #b91d73
-    ;
-    color: #000;
-    text-align: center;
-    line-height: 120px;
-}
-#logo {
-    text-align: right;
-    padding-right: 20px;
-}
-#logo img {
-    width: 100px;
-}
-#title {
-    text-align: left;
-    padding-left: 20px;
-}
-.content {
-    margin-top: 120px;
-}
-.content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-.content th,
-.content td {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-}
-.medewerker {
-    width: 20%;
-}
-</style>
-');
-
-
-
-
-
-    // Definieer het pad naar het logo-bestand
-    $logoPath = 'gilde.png';
-    $htmlLogo = '<img src="' . $logoPath . '">';
+    $mpdf->WriteHTML('
+    <style>
+    @page {
+        header: html_Urenregistraties;
+        footer: html_Footer;
+        margin-top: ;
+        margin-left: 0;
+        margin-right: 0;
+        margin-bottom: 0;
+    }
+    #black-bar {
+        background-color: #999;
+        width: 100vw;
+        height: 120px;
+        text-align: center;
+        color: #fff;
+        line-height: 120px;
+        font-size: 18px;
+        position: absolute;
+        top: -120px;
+        left: 0;
+    }
+    #header-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background-color: #b91d73;
+        color: #000;
+        text-align: center;
+        line-height: 120px;
+    }
+    #logo {
+        text-align: right;
+        padding-right: 20px;
+    }
+    #logo img {
+        width: 100px;
+    }
+    #title {
+        text-align: left;
+        padding-left: 20px;
+    }
+    .content {
+        margin-top: 120px;
+    }
+    .content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .content th,
+    .content td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+    .medewerker {
+        width: 20%;
+    }
+    </style>
+    ');
 
     // Voeg de header HTML toe
     $mpdf->SetHTMLHeader('
@@ -120,14 +108,16 @@ $mpdf->WriteHTML('
         <div id="title">
             <h1>Gewerkte uren</h1>
         </div>
-        <div id="logo">' . $htmlLogo . '</div>
+        <div id="logo">
+            <img src="gilde.png" alt="Logo">
+        </div>
     </div>
     ');
 
     // Voeg de footer HTML toe
     $mpdf->SetHTMLFooter('
     <div id="footer">
-        
+        <!-- Footer content -->
     </div>
     ');
 
@@ -157,11 +147,12 @@ $mpdf->WriteHTML('
     // Voeg de inhoud van de PDF toe
     $mpdf->WriteHTML($html);
 
-    // Uitvoer van de PDF als download met de bestandsnaam op basis van de medewerker
-    $mpdf->Output($pdfName . '.pdf', 'D');
+    // Geef de PDF weer in de browser in plaats van deze te downloaden
+    $mpdf->Output('', 'I');
     exit;
 }
 ?>
+
 
 
 
