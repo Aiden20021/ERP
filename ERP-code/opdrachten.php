@@ -138,7 +138,7 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             border-bottom: 1px solid #ddd;
         }
 
-        .delete-button {
+        .delete-button, .update-button {
             background-color: #6227bb;
             color: #fff;
             padding: 4px 8px;
@@ -146,17 +146,13 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            text-decoration: none;
         }
 
-        .delete-button:hover {
-            background-color: #6227bb;
+        .delete-button:hover, .update-button:hover {
+            background-color: #491d87;
         }
 
-        .delete-button {
-    text-decoration: none; 
-}
-
-        
     </style>
 </head>
 <body>
@@ -197,8 +193,7 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
     mysqli_set_charset($conn, "utf8mb4");
     
     // Controleren of er een POST-verzoek is verzonden om een rij toe te voegen
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      //   print_r($_POST);
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
         $opdrachten = $_POST["opdracht"];
         $klantID = $_POST["klanten"];
         $aanvraagdatum = $_POST["aanvraagdatum"];
@@ -206,7 +201,6 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
 
         // Voer de SQL-query uit om de nieuwe rij toe te voegen
         $insertSql = "INSERT INTO opdrachten (Opdrachten, klant, Aanvraagdatum, `Benodigde kennis`) VALUES ('$opdrachten',$klantID, '$aanvraagdatum', '$benodigdeKennis')";
-        // echo $insertSql; 
         $insertResult = mysqli_query($conn, $insertSql);
 
         if ($insertResult) {
@@ -215,14 +209,30 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             echo "Fout bij het toevoegen van de rij: " . mysqli_error($conn);
         }
     }
-    
+
+    // Controleren of er een POST-verzoek is verzonden om een rij bij te werken
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
+        $updateID = $_POST['update_id'];
+        $opdrachten = $_POST['opdracht'];
+        $klantID = $_POST['klanten'];
+        $aanvraagdatum = $_POST['aanvraagdatum'];
+        $benodigdeKennis = $_POST['benodigde_kennis'];
+
+        $updateSql = "UPDATE opdrachten SET Opdrachten = '$opdrachten', klant = $klantID, Aanvraagdatum = '$aanvraagdatum', `Benodigde kennis` = '$benodigdeKennis' WHERE ID = $updateID";
+        $updateResult = mysqli_query($conn, $updateSql);
+
+        if ($updateResult) {
+            echo "Rij succesvol bijgewerkt.";
+        } else {
+            echo "Fout bij het bijwerken van de rij: " . mysqli_error($conn);
+        }
+    }
+
     // Controleren of er een GET-verzoek is verzonden om een rij te verwijderen
     if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["delete"])) {
         $deleteID = $_GET["delete"];
 
-        // Voer de SQL-query uit om de rij te verwijderen
         $deleteSql = "DELETE FROM opdrachten WHERE ID = $deleteID";
-        
         $deleteResult = mysqli_query($conn, $deleteSql);
 
         if ($deleteResult) {
@@ -231,65 +241,13 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             echo "Fout bij het verwijderen van de rij: " . mysqli_error($conn);
         }
     }
-    
-    // Voer de SQL-query uit om alle gegevens uit de tabel op te halen
+
     $sql = "SELECT * FROM `opdrachten`";
     $result = mysqli_query($conn, $sql);
-    
 
-
-
-// Zoekbalk om klantID's te zoeken
-echo "<form method='GET'>";
-echo "<input type='text' name='search' placeholder='KlantID'>";
-echo "<input type='submit' value='Zoeken'>";
-echo "</form>";
-
-// Controleren of er een GET-verzoek is verzonden om klantID's te zoeken
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["search"])) {
-    $search = $_GET["search"];
-    // Voer de SQL-query uit om klanten te zoeken op basis van het klantID
-    $searchSql = "SELECT * FROM `opdrachten` WHERE klant = '$search'";
-    $searchResult = mysqli_query($conn, $searchSql);
-    
-    // Maak een HTML-tabel en vul deze met de zoekresultaten
-    echo "<h2>Zoekresultaten:</h2>";
     echo "<div class='table-container'>";
     echo "<table>";
-    echo "<tr><th>KlantID</th><th>Opdracht</th><th>Aanvraagdatum</th><th>Omschrijving</th><th></th></tr>";
-    
-    while ($row = mysqli_fetch_assoc($searchResult)) {
-        echo "<tr>";
-        echo "<td>" . $row["klant"] . "</td>";
-        echo "<td>" . $row["opdrachten"] . "</td>";
-        echo "<td>" . $row["Aanvraagdatum"] . "</td>";
-        echo "<td>" . $row["Benodigde kennis"] . "</td>";
-        echo "<td><a class='delete-button' href='?delete=" . $row["ID"] . "'>Verwijderen</a></td>";
-                
-        echo "</tr>";
-    }
-    
-    echo "</table>";
-    echo "</div>";
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // Maak een HTML-tabel en vul deze met de gegevens uit de database
-    echo "<div class='table-container'>";
-    echo "<table>";
-    echo "<tr><th>KlantID</th><th>Opdracht</th><th>Aanvraagdatum</th><th>Omschrijving</th><th></th></tr>";
+    echo "<tr><th>KlantID</th><th>Opdracht</th><th>Aanvraagdatum</th><th>Omschrijving</th><th></th><th></th></tr>";
     
     while ($row = mysqli_fetch_assoc($result)) {
         echo "<tr>";
@@ -298,41 +256,40 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["search"])) {
         echo "<td>" . $row["Aanvraagdatum"] . "</td>";
         echo "<td>" . $row["Benodigde kennis"] . "</td>";
         echo "<td><a class='delete-button' href='?delete=" . $row["ID"] . "'>Verwijderen</a></td>";
-                
+        echo "<td>";
+        echo "<form method='post' style='display:inline;'>";
+        echo "<input type='hidden' name='update_id' value='" . $row["ID"] . "'>";
+        echo "<input type='hidden' name='klanten' value='" . $row["klant"] . "'>";
+        echo "<input type='hidden' name='opdracht' value='" . $row["opdrachten"] . "'>";
+        echo "<input type='hidden' name='aanvraagdatum' value='" . $row["Aanvraagdatum"] . "'>";
+        echo "<input type='hidden' name='benodigde_kennis' value='" . $row["Benodigde kennis"] . "'>";
+        echo "<button type='submit' class='update-button' name='update'>Bijwerken</button>";
+        echo "</form>";
+        echo "</td>";
         echo "</tr>";
     }
     
-    // Voer de SQL-query uit om klanten uit de tabel op te halen
     $sql = "SELECT * FROM `klanten`;";
     $klanten = mysqli_query($conn, $sql);
-    // print_r($klanten);
-    // Formulier voor het toevoegen van een nieuwe rij
+
     echo "<tr>";
     echo "<form method='post'>";
-    
-    echo '<td>';
-    echo "<select name=\"klanten\" id=\"klanten\">";
-    // While loop through klanten
+    echo "<td>";
+    echo "<select name='klanten' id='klanten'>";
     while ($klant = mysqli_fetch_assoc($klanten)) {
         echo '<option value="'.$klant['ID'].'">'. $klant['Bedrijfsnaam'] .'</option>';
     }
     echo '</select>';
     echo '</td>';
-    // echo "<td><input type='text' name='klant' placeholder='klant'></td>";
-
-
     echo "<td><input type='text' name='opdracht'></td>";
     echo "<td><input type='date' name='aanvraagdatum'></td>";
     echo "<td><input type='text' name='benodigde_kennis' placeholder=''></td>";
-    echo "<td><input type='submit' value='Toevoegen'></td>";
+    echo "<td><input type='submit' value='Toevoegen' name='add'></td>";
     echo "</form>";
     echo "</tr>";
-    
     echo "</table>";
     echo "</div>";
-    
 
-    // Sluit de verbinding met de database
     $conn->close();
 ?>
 </body>
