@@ -49,31 +49,84 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Update Opdracht</title>
-    <style>
+   <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #bb278a;
+            color: #333;
         }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background: #fff;
+        header {
+            background-color: #333;
             padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin-right: 30px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ccc;
+        }
+        main {
+            max-width: 300px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         h2 {
             text-align: center;
-            color: #333;
+            margin-bottom: 20px;
         }
         form {
             display: flex;
             flex-direction: column;
+            gap: 15px;
         }
         label {
-            margin-bottom: 5px;
             font-weight: bold;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            background-color: #6227bb;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #4f1e94;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
         }
         input, select {
             margin-bottom: 10px;
@@ -83,13 +136,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 14px;
         }
         input[type="submit"] {
-            background-color: #28a745;
+            background-color: #4f1e94;
             color: #fff;
             border: none;
             cursor: pointer;
         }
         input[type="submit"]:hover {
-            background-color: #218838;
+            background-color: #4f1e94;
         }
     </style>
 </head>
