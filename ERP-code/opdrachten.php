@@ -1,29 +1,17 @@
-<?php
-session_start();
-
-// Controleer of de gebruiker is ingelogd als admin of medewerker
-if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
-    header('location:index.html'); 
-    exit();
-}
-?>
-
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-    <title>Medewerker registreren</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opdrachten Beheren</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-image: url(""); 
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-color: #bb278a;  
+            background-color: #bb278a;
+            color: #333;
         }
-        
         header {
             background-color: #333;
             padding: 20px;
@@ -31,266 +19,209 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             justify-content: space-between;
             align-items: center;
         }
-        
-        nav {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-        
         nav ul {
-            list-style-type: none;
+            list-style: none;
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
         }
-        
         nav ul li {
-            display: inline;
-            margin-right: 4cm; 
+            margin-right: 30px;
         }
-        
         nav ul li a {
             color: #fff;
             text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 20px; 
+            font-size: 18px;
+            transition: color 0.3s;
         }
-        
         nav ul li a:hover {
             color: #ccc;
         }
-        
-        .header-greeting {
-            color: #fff;
-            margin-left: auto;
-        }
-        
         main {
-            margin: 100px auto; 
-            max-width: 600px;
-            background-color: #bb278a;
+            max-width: 800px;
+            margin: 50px auto;
             padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-        
         h2 {
-            color: #333;
             text-align: center;
             margin-bottom: 20px;
         }
-        
         form {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            gap: 15px;
         }
-        
         label {
-            display: block;
-            margin-bottom: 5px;
             font-weight: bold;
-            color: #333;
         }
-        
-        input[type="date"],
-        input[type="number"],
-        select,
-        textarea {
-            margin-bottom: 10px;
-            padding: 8px;
-            width: 100%;
+        input, select {
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
+            font-size: 16px;
         }
-        
-        textarea {
-            height: 100px;
-        }
-        
         input[type="submit"] {
-            padding: 8px 16px;
             background-color: #6227bb;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s;
         }
-        
         input[type="submit"]:hover {
-            background-color: #6227bb;
+            background-color: #4f1e94;
         }
-
         table {
-            margin-top: 20px;
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
-
         th, td {
-            padding: 8px;
+            padding: 10px;
+            border: 1px solid #ddd;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
-
         .delete-button, .update-button {
-            background-color: #6227bb;
-            color: #fff;
-            padding: 4px 8px;
+            padding: 5px 10px;
             border: none;
             border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            color: #fff;
             text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-
-        .delete-button:hover, .update-button:hover {
-            background-color: #491d87;
+        .delete-button {
+            background-color: #bb2727;
         }
-
+        .delete-button:hover {
+            background-color: #a12222;
+        }
+        .update-button {
+            background-color: #28a745;
+        }
+        .update-button:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
-
 <header>
-        <nav>
-            <ul>
-                <li>
-                    <a href="manger.php">
-                        <div class="header-title">
-                            <span>Uren</span>
-                            <span>Invullen</span>
-                        </div>
-                    </a>
-                </li>
-                <li><a href="werkzaamheden.php">Werkzaamheden</a></li>
-                <li><a href="medewerkers.php">Medewerkers</a></li>
-                <li><a href="opdrachten.php">Opdrachten</a></li>
-                <li><a href="klanten.php" class="active">Klanten</a></li>
-            </ul>
-        </nav>
-        <a href="admin_page.php"><button style="position: absolute; top: 20px; left: 20px;">Terug</button></a>
+    <nav>
+        <ul>
+            <li><a href="manger.php">Uren Invullen</a></li>
+            <li><a href="werkzaamheden.php">Werkzaamheden</a></li>
+            <li><a href="medewerkers.php">Medewerkers</a></li>
+            <li><a href="opdrachten.php">Opdrachten</a></li>
+            <li><a href="klanten.php" class="active">Klanten</a></li>
+        </ul>
+    </nav>
+    <a href="admin_page.php"><button>Terug</button></a>
+</header>
+<main>
+    <h2>Opdrachten Beheren</h2>
 
-    </header>
-      
     <?php
     include 'db.php';
-        
-    // Maak een verbinding met de database
-     $conn = getConnection();
-    
-    // Controleer of de verbinding is gelukt
-    if (!$conn) {  
-        die("Connection failed: " . mysqli_connect_error());
+    $conn = getConnection();
+
+    if (!$conn) {
+        die("Verbindingsfout: " . mysqli_connect_error());
     }
-    
-    // Set the character set to utf8mb4
+
     mysqli_set_charset($conn, "utf8mb4");
-    
-    // Controleren of er een POST-verzoek is verzonden om een rij toe te voegen
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $opdrachten = $_POST["opdracht"];
         $klantID = $_POST["klanten"];
         $aanvraagdatum = $_POST["aanvraagdatum"];
         $benodigdeKennis = $_POST["benodigde_kennis"];
 
-        // Voer de SQL-query uit om de nieuwe rij toe te voegen
-        $insertSql = "INSERT INTO opdrachten (Opdrachten, klant, Aanvraagdatum, `Benodigde kennis`) VALUES ('$opdrachten',$klantID, '$aanvraagdatum', '$benodigdeKennis')";
-        $insertResult = mysqli_query($conn, $insertSql);
+        $insertSql = "INSERT INTO opdrachten (Opdrachten, klant, Aanvraagdatum, `Benodigde kennis`) VALUES ('$opdrachten', $klantID, '$aanvraagdatum', '$benodigdeKennis')";
 
-        if ($insertResult) {
-            echo "Rij succesvol toegevoegd.";
+        if (mysqli_query($conn, $insertSql)) {
+            echo "<p>Rij succesvol toegevoegd.</p>";
         } else {
-            echo "Fout bij het toevoegen van de rij: " . mysqli_error($conn);
+            echo "<p>Fout bij toevoegen: " . mysqli_error($conn) . "</p>";
         }
     }
 
-    // Controleren of er een POST-verzoek is verzonden om een rij bij te werken
-    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
-        $updateID = $_POST['update_id'];
-        $opdrachten = $_POST['opdracht'];
-        $klantID = $_POST['klanten'];
-        $aanvraagdatum = $_POST['aanvraagdatum'];
-        $benodigdeKennis = $_POST['benodigde_kennis'];
-
-        $updateSql = "UPDATE opdrachten SET Opdrachten = '$opdrachten', klant = $klantID, Aanvraagdatum = '$aanvraagdatum', `Benodigde kennis` = '$benodigdeKennis' WHERE ID = $updateID";
-        $updateResult = mysqli_query($conn, $updateSql);
-
-        if ($updateResult) {
-            echo "Rij succesvol bijgewerkt.";
-        } else {
-            echo "Fout bij het bijwerken van de rij: " . mysqli_error($conn);
-        }
-    }
-
-    // Controleren of er een GET-verzoek is verzonden om een rij te verwijderen
-    if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["delete"])) {
+    if (isset($_GET["delete"])) {
         $deleteID = $_GET["delete"];
-
         $deleteSql = "DELETE FROM opdrachten WHERE ID = $deleteID";
-        $deleteResult = mysqli_query($conn, $deleteSql);
 
-        if ($deleteResult) {
-            echo "Rij succesvol verwijderd.";
+        if (mysqli_query($conn, $deleteSql)) {
+            echo "<p>Rij succesvol verwijderd.</p>";
         } else {
-            echo "Fout bij het verwijderen van de rij: " . mysqli_error($conn);
+            echo "<p>Fout bij verwijderen: " . mysqli_error($conn) . "</p>";
         }
     }
 
-    $sql = "SELECT * FROM `opdrachten`";
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($conn, "SELECT * FROM opdrachten");
+    ?>
 
-    echo "<div class='table-container'>";
-    echo "<table>";
-    echo "<tr><th>KlantID</th><th>Opdracht</th><th>Aanvraagdatum</th><th>Omschrijving</th><th></th><th></th></tr>";
-    
-    while ($row = mysqli_fetch_assoc($result)) {
-        echo "<tr>";
-        echo "<td>" . $row["klant"] . "</td>";
-        echo "<td>" . $row["opdrachten"] . "</td>";
-        echo "<td>" . $row["Aanvraagdatum"] . "</td>";
-        echo "<td>" . $row["Benodigde kennis"] . "</td>";
-        echo "<td><a class='delete-button' href='?delete=" . $row["ID"] . "'>Verwijderen</a></td>";
-        echo "<td>";
-        echo "<form method='post' style='display:inline;'>";
-        echo "<input type='hidden' name='update_id' value='" . $row["ID"] . "'>";
-        echo "<input type='hidden' name='klanten' value='" . $row["klant"] . "'>";
-        echo "<input type='hidden' name='opdracht' value='" . $row["opdrachten"] . "'>";
-        echo "<input type='hidden' name='aanvraagdatum' value='" . $row["Aanvraagdatum"] . "'>";
-        echo "<input type='hidden' name='benodigde_kennis' value='" . $row["Benodigde kennis"] . "'>";
-        echo "<button type='submit' class='update-button' name='update'>Bijwerken</button>";
-        echo "</form>";
-        echo "</td>";
-        echo "</tr>";
-    }
-    
-    $sql = "SELECT * FROM `klanten`;";
-    $klanten = mysqli_query($conn, $sql);
+    <form method="post">
+        <label for="klanten">Klant</label>
+        <select name="klanten" id="klanten">
+            <?php
+            $klantenResult = mysqli_query($conn, "SELECT * FROM klanten");
+            while ($klant = mysqli_fetch_assoc($klantenResult)) {
+                echo "<option value='" . $klant['ID'] . "'>" . $klant['Bedrijfsnaam'] . "</option>";
+            }
+            ?>
+        </select>
 
-    echo "<tr>";
-    echo "<form method='post'>";
-    echo "<td>";
-    echo "<select name='klanten' id='klanten'>";
-    while ($klant = mysqli_fetch_assoc($klanten)) {
-        echo '<option value="'.$klant['ID'].'">'. $klant['Bedrijfsnaam'] .'</option>';
-    }
-    echo '</select>';
-    echo '</td>';
-    echo "<td><input type='text' name='opdracht'></td>";
-    echo "<td><input type='date' name='aanvraagdatum'></td>";
-    echo "<td><input type='text' name='benodigde_kennis' placeholder=''></td>";
-    echo "<td><input type='submit' value='Toevoegen' name='add'></td>";
-    echo "</form>";
-    echo "</tr>";
-    echo "</table>";
-    echo "</div>";
+        <label for="opdracht">Opdracht</label>
+        <input type="text" id="opdracht" name="opdracht" required>
 
-    $conn->close();
-?>
+        <label for="aanvraagdatum">Aanvraagdatum</label>
+        <input type="date" id="aanvraagdatum" name="aanvraagdatum" required>
+
+        <label for="benodigde_kennis">Benodigde kennis</label>
+        <input type="text" id="benodigde_kennis" name="benodigde_kennis">
+
+        <input type="submit" value="Toevoegen">
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>KlantID</th>
+            <th>Opdracht</th>
+            <th>Aanvraagdatum</th>
+            <th>Benodigde kennis</th>
+            <th>Acties</th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $klant = isset($row['klant']) ? $row['klant'] : 'Onbekend';
+                $opdracht = isset($row['Opdrachten']) ? $row['Opdrachten'] : 'Geen opdracht';
+                $aanvraagdatum = isset($row['Aanvraagdatum']) ? $row['Aanvraagdatum'] : 'Geen datum';
+                $benodigdeKennis = isset($row['Benodigde kennis']) ? $row['Benodigde kennis'] : 'Geen kennis';
+
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($klant) . "</td>";
+                echo "<td>" . htmlspecialchars($opdracht) . "</td>";
+                echo "<td>" . htmlspecialchars($aanvraagdatum) . "</td>";
+                echo "<td>" . htmlspecialchars($benodigdeKennis) . "</td>";
+                echo "<td>";
+                echo "<a class='delete-button' href='?delete=" . $row['ID'] . "'>Verwijderen</a> ";
+                echo "<a class='update-button' href='update.php?id=" . $row['ID'] . "'>Bijwerken</a>";
+                echo "</td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5'>Geen opdrachten gevonden.</td></tr>";
+        }
+        ?>
+        </tbody>
+    </table>
+
+    <?php $conn->close(); ?>
+</main>
 </body>
 </html>
