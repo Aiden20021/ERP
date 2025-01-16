@@ -7,7 +7,6 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -69,14 +68,15 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
         
         main {
             margin: 100px auto; 
-            max-width: 600px;
-            background-color: #bb278a;
+            max-width: 800px;
+            background-color: #ffffff;
             padding: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
         }
         
         h2 {
-            color: #333;
+            color: #fff;
             text-align: center;
             margin-bottom: 20px;
         }
@@ -97,6 +97,8 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
         
         input[type="date"],
         input[type="number"],
+        input[type="text"],
+        input[type="email"],
         select,
         textarea {
             margin-bottom: 10px;
@@ -112,7 +114,8 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             height: 100px;
         }
         
-        input[type="submit"] {
+        input[type="submit"],
+        .button {
             padding: 8px 16px;
             background-color: #6227bb;
             color: white;
@@ -120,10 +123,12 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
+            border-radius: 4px;
         }
         
-        input[type="submit"]:hover {
-            background-color: #6227bb;
+        input[type="submit"]:hover,
+        .button:hover {
+            background-color: #451e8e;
         }
 
         table {
@@ -138,10 +143,6 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             border-bottom: 1px solid #ddd;
         }
 
-        .add-form-row td:last-child {
-            text-align: right;
-        }
-
         .delete-button {
             background-color: #6227bb;
             color: #fff;
@@ -152,23 +153,9 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
         }
 
         .delete-button:hover {
-            background-color: #6227bb;
+            background-color: #451e8e;
         }
 
-        .button {
-            background-color: #6227bb;
-            color: #fff;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: #6227bb;
-        }
-
-        
     </style>
 </head>
 <body>
@@ -191,123 +178,100 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
         </nav>
         <a href="admin_page.php"><button style="position: absolute; top: 20px; left: 20px;">Terug</button></a>
     </header>
-    <div class="search-container">
-            <form method="get" action="klanten.php">
-                <input type="text" name="search" placeholder="Zoeken op KlantID...">
-                <input type="submit" value="Zoeken">
-    <?php
-        include 'db.php';
-        
+    <main>
+        <h2>Klanten beheren</h2>
+        <form method="post">
+            <table>
+                <tr>
+                    <td><input type="text" name="bedrijfsnaam" placeholder="Bedrijfsnaam"></td>
+                    <td><input type="email" name="email" placeholder="E-Mail"></td>
+                    <td><input type="text" name="adres" placeholder="Adres"></td>
+                    <td><input type="text" name="telefoon" placeholder="Telefoonnummer"></td>
+                    <td><input type="text" name="postcode" placeholder="Postcode"></td>
+                    <td><button class="button" type="submit" name="add">Toevoegen</button></td>
+                </tr>
+            </table>
+        </form>
 
-       // Maak een verbinding met de database
-        $conn = getConnection();
-        
-        // Controleer of de verbinding is gelukt
-        if (!$conn) {  
-            die("Connection failed: " . mysqli_connect_error());
-        }
-        
-        // Set the character set to utf8mb4
-        mysqli_set_charset($conn, "utf8mb4");
-        
-        
-        // Controleren of er een POST-verzoek is verzonden om een rij toe te voegen
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if (isset($_POST["add"])) {
-                $bedrijfsnaam = $_POST["bedrijfsnaam"];
-                $email = $_POST["email"];
-                $adres = $_POST["adres"];
-                $telefoon = $_POST["telefoon"];
-                $postcode = $_POST["postcode"];
-                
-                // Voer de SQL-query uit om de nieuwe rij toe te voegen
-                $insertSql = "INSERT INTO klanten (Bedrijfsnaam,`E-Mail`, Adres, `Telefoon nummer`, Postcode) VALUES ('$bedrijfsnaam','$email', '$adres', '$telefoon', '$postcode')";
-                $insertResult = mysqli_query($conn, $insertSql);
-                
-                if ($insertResult) {
-                    echo "Klant succesvol toegevoegd.";
-                } else {
-                    echo "Fout bij het toevoegen van de rij: " . mysqli_error($conn);
+        <?php
+            include 'db.php';
+            
+            $conn = getConnection();
+            if (!$conn) {  
+                die("Connection failed: " . mysqli_connect_error());
+            }
+            
+            mysqli_set_charset($conn, "utf8mb4");
+            
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if (isset($_POST["add"])) {
+                    $bedrijfsnaam = trim($_POST["bedrijfsnaam"]);
+                    $email = trim($_POST["email"]);
+                    $adres = trim($_POST["adres"]);
+                    $telefoon = trim($_POST["telefoon"]);
+                    $postcode = trim($_POST["postcode"]);
+
+                    // Controleer of alle velden leeg zijn
+                    if (empty($bedrijfsnaam) && empty($email) && empty($adres) && empty($telefoon) && empty($postcode)) {
+                        echo "<p>Alle velden zijn leeg. Voeg alstublieft gegevens in.</p>";
+                    } else {
+                        $insertSql = "INSERT INTO klanten (Bedrijfsnaam, `E-Mail`, Adres, `Telefoon nummer`, Postcode) VALUES ('$bedrijfsnaam','$email', '$adres', '$telefoon', '$postcode')";
+                        $insertResult = mysqli_query($conn, $insertSql);
+
+                        if ($insertResult) {
+                            echo "<p>Klant succesvol toegevoegd.</p>";
+                        } else {
+                            echo "<p>Fout bij het toevoegen van de rij: " . mysqli_error($conn) . "</p>";
+                        }
+                    }
+                }
+
+                if (isset($_POST["delete_row"])) {
+                    $id = $_POST["delete_row"];
+                    $deleteSql = "DELETE FROM klanten WHERE ID = '$id'";
+                    $deleteResult = mysqli_query($conn, $deleteSql);
+                    
+                    if ($deleteResult) {
+                        echo "<p>Klant succesvol verwijderd.</p>";
+                    } else {
+                        echo "<p>Fout bij het verwijderen van de rij: " . mysqli_error($conn) . "</p>";
+                    }
                 }
             }
-            
-            if (isset($_POST["delete_row"])) {
-                $id = $_POST["delete_row"];
+
+            $sql = "SELECT * FROM klanten";
+            if (isset($_GET["search"])) {
+                $searchTerm = $_GET["search"];
+                $sql .= " WHERE ID LIKE '%$searchTerm%'";
+            }
+            $result = mysqli_query($conn, $sql);
+
+            if (mysqli_num_rows($result) > 0) {
+                echo "<table>";
+                echo "<tr><th>KlantID</th><th>Bedrijfsnaam</th><th>E-Mail</th><th>Adres</th><th>Telefoon nummer</th><th>Postcode</th><th></th></tr>";
                 
-                // Voer de SQL-query uit om de rij te verwijderen
-                $deleteSql = "DELETE FROM klanten WHERE ID = '$id'";
-                $deleteResult = mysqli_query($conn, $deleteSql);
-                
-                if ($deleteResult) {
-                    echo "Klant succesvol verwijderd.";
-                } else {
-                    echo "Fout bij het verwijderen van de rij: " . mysqli_error($conn);
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<form method='post'>";
+                    echo "<input type='hidden' name='id' value='" . $row["ID"] . "'>";
+                    echo "<td>" . $row["ID"] . "</td>";
+                    echo "<td>" . $row["Bedrijfsnaam"] . "</td>";
+                    echo "<td>" . $row["E-Mail"] . "</td>";
+                    echo "<td>" . $row["Adres"] . "</td>";
+                    echo "<td>" . $row["Telefoon nummer"] . "</td>";
+                    echo "<td>" . $row["Postcode"] . "</td>";
+                    echo "<td><button class='delete-button' type='submit' name='delete_row' value='" . $row["ID"] . "'>Verwijderen</button></td>";
+                    echo "</form>";
+                    echo "</tr>";
                 }
-            }
-        }
-        
-        // Voer de SQL-query uit om de klantgegevens op te halen
-        $sql = "SELECT * FROM klanten";
-        //echo '1 sql: '. $sql. "\r\n";
-        
-        // Controleren of er een zoekopdracht is verzonden
-        if (isset($_GET["search"])) {
-            $searchTerm = $_GET["search"];
-            //echo $searchTerm;
-            $sql .= " WHERE ID LIKE '%$searchTerm%'";
-            //echo 'sql 2: '.$sql ."\r\n";
-        }
-        $result = mysqli_query($conn, $sql);
-        // Controleer of er resultaten zijn
-        if (mysqli_num_rows($result) > 0) {
-            echo "<div class='table-container'>";
-            echo "<table>";
-            echo "<tr><th>KlantID</th><th>Bedrijfsnaam</th><th>E-Mail</th><th>Adres</th><th>Telefoon nummer</th><th>Postcode</th><th></th></tr>";
-            
-            while ($row = mysqli_fetch_assoc($result)) {
-                echo "<tr>";
-                echo "<form method='post'>";
-                echo "<input type='hidden' name='id' value='" . $row["ID"] . "'>";
-                echo "<input type='hidden' name='bedrijfsnaam' value='" . $row["Bedrijfsnaam"] . "'>";
-                echo "<input type='hidden' name='email' value='" . $row["E-Mail"] . "'>";
-                echo "<input type='hidden' name='adres' value='" . $row["Adres"] . "'>";
-                echo "<input type='hidden' name='telefoon' value='" . $row["Telefoon nummer"] . "'>";
-                echo "<input type='hidden' name='postcode' value='" . $row["Postcode"] . "'>";
                 
-                echo "<td>" . $row["ID"] . "</td>";
-                echo "<td>" . $row["Bedrijfsnaam"] . "</td>";
-                echo "<td>" . $row["E-Mail"] . "</td>";
-                echo "<td>" . $row["Adres"] . "</td>";
-                echo "<td>" . $row["Telefoon nummer"] . "</td>";
-                echo "<td>" . $row["Postcode"] . "</td>";
-                echo "<td><button class='delete-button' type='submit' name='delete_row' value='" . $row["ID"] . "'>Verwijderen</button></td>";
-                
-                echo "</form>";
-                echo "</tr>";
+                echo "</table>";
+            } else {
+                echo "<p>Geen klantgegevens gevonden.</p>";
             }
-            
-            echo "<tr>";
-            echo "<form method='post'>";
-            echo "<td></td>";
-            echo "<td><input type='text' name='bedrijfsnaam'></td>";
-            echo "<td><input type='email' name='email'></td>";
-            echo "<td><input type='text' name='adres'></td>";
-            echo "<td><input type='text' name='telefoon'></td>";
-            echo "<td><input type='text' name='postcode'></td>";
-            echo "<td><button class='button' type='submit' name='add'>Toevoegen</button></td>";
-            echo "</form>";
-            echo "</tr>";
-            
-            echo "</table>";
-            echo "</div>";
-        } else {
-            echo "Geen klantgegevens gevonden.";
-        }
-        
-        
-        // Sluit de verbinding met de MySQL-server
-        $conn->close();
-        
-    ?>
+
+            $conn->close();
+        ?>
+    </main>
 </body>
 </html>

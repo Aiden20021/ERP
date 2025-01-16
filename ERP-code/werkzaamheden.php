@@ -220,7 +220,7 @@ if (isset($_GET['pdf'])) {
         main {
             margin: 100px auto; /* Aangepaste marge */
             max-width: 800px; /* Aangepaste maximale breedte */
-            background-color: #bb278a;
+            background-color:rgb(255, 255, 255);
             padding: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
