@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd als admin of medewerker
+if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
+    header('location:index.html'); 
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -110,7 +120,14 @@
 <header>
     <nav>
         <ul>
-            <li><a href="manger.php">Uren Invullen</a></li>
+        <li>
+                    <a href="manger.php">
+                        <div class="header-title">
+                            <span>Uren</span>
+                            <span>Invullen</span>
+                        </div>
+                    </a>
+                </li>
             <li><a href="werkzaamheden.php">Werkzaamheden</a></li>
             <li><a href="medewerkers.php">Medewerkers</a></li>
             <li><a href="opdrachten.php">Opdrachten</a></li>
@@ -182,6 +199,7 @@
         <input type="text" id="benodigde_kennis" name="benodigde_kennis">
 
         <input type="submit" value="Toevoegen">
+        
     </form>
 
     <table>
@@ -205,14 +223,15 @@
 
                 echo "<tr>";
                 echo "<td>" . htmlspecialchars($klant) . "</td>";
-                echo "<td>" . htmlspecialchars($opdracht) . "</td>";
+                echo "<td>" . $row["opdrachten"] . "</td>";
                 echo "<td>" . htmlspecialchars($aanvraagdatum) . "</td>";
                 echo "<td>" . htmlspecialchars($benodigdeKennis) . "</td>";
                 echo "<td>";
                 echo "<a class='delete-button' href='?delete=" . $row['ID'] . "'>Verwijderen</a> ";
-                echo "<a class='update-button' href='update.php?id=" . $row['ID'] . "'>Bijwerken</a>";
                 echo "</td>";
                 echo "</tr>";
+
+               
             }
         } else {
             echo "<tr><td colspan='5'>Geen opdrachten gevonden.</td></tr>";

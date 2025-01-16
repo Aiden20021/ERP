@@ -1,21 +1,26 @@
 <?php
-include 'db.php';
+session_start();
 
-// Maak een verbinding met de database
-$conn = getConnection();
+// Controleer of de gebruiker is ingelogd als admin of medewerker
+if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
+    header('location:index.html'); 
+    exit();
+}
+?>
+
+<?php
+ include 'db.php';
+        
+ // Maak een verbinding met de database
+  $conn = getConnection();
 
 $message = "";
 
 // Definieer een associatieve array met de opdrachtnamen en hun corresponderende waarden
 $opdrachten = array(
-    "Webservers fixen",
-    "Webservers bouwen",
-    "Webserver verbinden",
-    "Database optimaliseren",
-    "Netwerk configureren",
-    "API ontwikkelen",
-    "Gebruikersbeheer implementeren",
-    "Systeembeveiliging verbeteren"
+    "opdracht1" => "Webservers fixen",
+    "opdracht2" => "Webservers bouwen",
+    "opdracht3" => "Webserver verbinden"
 );
 
 if ($conn->connect_error) {
@@ -24,6 +29,8 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    echo 'post request';
+    print_r($_POST);
     $naam = $_POST["naam"];
     $datum = $_POST["datum"];
     $uren = $_POST["uren"];
@@ -32,9 +39,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "INSERT INTO uren (naam, datum, uren, project, beschrijving)
             VALUES ('$naam', '$datum', '$uren', '$opdrachtNaam', '$beschrijving')";
+    echo $sql;
 
     if ($conn->query($sql) === TRUE) {
         $message = "Gegevens succesvol toegevoegd aan de database.";
+
         header("Location: werkzaamheden.php");
         exit();
     } else {
@@ -179,46 +188,43 @@ $conn->close();
     </style>
 </head>
 <body>
-<header>
-    <nav>
-        <ul>
-            <li><a href="#">Uren invullen</a></li>
-            <li><a href="werkzaamheden.php">Werkzaamheden</a></li>
-            <li><a href="medewerkers.php" onclick="showTable()">Medewerkers</a></li>
-            <li><a href="opdrachten.php">Opdrachten</a></li>
-            <li><a href="klanten.php">Klanten</a></li>
-        </ul>
-    </nav>
-    <a href="admin_page.php"><button style="position: absolute; top: 20px; left: 20px;">Terug</button></a>
-</header>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#">Uren invullen</a></li>
+                <li><a href="werkzaamheden.php">Werkzaamheden</a></li>
+                <li><a href="medewerkers.php" onclick="showTable()">Medewerkers</a></li>
+                <li><a href="opdrachten.php">Opdrachten</a></li>
+                <li><a href="klanten.php">Klanten</a></li>
+            </ul>
+        </nav>
+        <a href="admin_page.php"><button style="position: absolute; top: 20px; left: 20px;">Terug</button></a>
 
-<main>
-    <h2>Registratie</h2>
-    <form method="POST" action="manger.php">
-        <label for="naam">Naam:</label>
-        <input type="text" id="naam" name="naam" required>
+        <span class="header-greeting"></span>
+    </header>
+      
+    <main>
+        <h2>Registratie</h2>
+            
+        <form method="POST" action="manger.php">
 
-        <label for="datum">Datum:</label>
-        <input type="date" id="datum" name="datum" required>
-
-        <label for="uren">Aantal uren:</label>
-        <input type="number" id="uren" min="1" name="uren" required>
-
-        <label for="opdracht">Opdracht:</label>
-        <select id="opdracht" name="opdracht" required>
-            <option value="">Selecteer een opdracht</option>
-            <?php
-            foreach ($opdrachten as $opdracht) {
-                echo "<option value=\"$opdracht\">$opdracht</option>";
-            }
-            ?>
-        </select>
-
-        <label for="beschrijving">Beschrijving:</label>
-        <textarea id="beschrijving" rows="4" cols="50" name="beschrijving"></textarea>
-
-        <input type="submit" value="Toevoegen">
-    </form>
-</main>
+            <label for="naam">Naam:</label>
+            <input type="name" id="naam" name="naam">
+    
+            <label for="datum">Datum:</label>
+            <input type="date" id="datum" name="datum">
+    
+            <label for="uren">Aantal uren:</label>
+            <input type="number" id="uren" min="1" name="uren">
+    
+            <label for="opdracht">Opdracht:</label>
+            <input type="text" id="opdracht" name="opdracht">
+    
+            <label for="beschrijving">Beschrijving:</label>
+            <textarea id="beschrijving" rows="4" cols="50" name="beschrijving"></textarea>
+    
+            <input type="submit" value="Toevoegen">
+        </form>
+    </main>
 </body>
 </html>

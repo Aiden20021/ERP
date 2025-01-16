@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd als admin of medewerker
+if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
+    header('location:index.html'); 
+    exit();
+}
+?>
+
+
+<?php
 include 'db.php';
 
 // Maak verbinding met de database
