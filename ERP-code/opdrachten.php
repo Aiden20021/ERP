@@ -144,7 +144,7 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
     $conn = getConnection();
 
     if (!$conn) {
-        die("Verbindingsfout: " . mysqli_connect_error());
+        die("<p>Verbindingsfout: " . mysqli_connect_error() . "</p>");
     }
 
     mysqli_set_charset($conn, "utf8mb4");
@@ -155,36 +155,42 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
         $aanvraagdatum = $_POST["aanvraagdatum"];
         $benodigdeKennis = $_POST["benodigde_kennis"];
 
-        $insertSql = "INSERT INTO opdrachten (Opdrachten, klant, Aanvraagdatum, `Benodigde kennis`) VALUES ('$opdrachten', $klantID, '$aanvraagdatum', '$benodigdeKennis')";
+        $insertSql = "INSERT INTO opdrachten (Opdrachten, klant, Aanvraagdatum, `Benodigde kennis`) VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($insertSql);
+        $stmt->bind_param("siss", $opdrachten, $klantID, $aanvraagdatum, $benodigdeKennis);
 
-        if (mysqli_query($conn, $insertSql)) {
+        if ($stmt->execute()) {
             echo "<p>Rij succesvol toegevoegd.</p>";
         } else {
-            echo "<p>Fout bij toevoegen: " . mysqli_error($conn) . "</p>";
+            echo "<p>Fout bij toevoegen: " . $stmt->error . "</p>";
         }
+        $stmt->close();
     }
 
     if (isset($_GET["delete"])) {
         $deleteID = $_GET["delete"];
-        $deleteSql = "DELETE FROM opdrachten WHERE ID = $deleteID";
+        $deleteSql = "DELETE FROM opdrachten WHERE ID = ?";
+        $stmt = $conn->prepare($deleteSql);
+        $stmt->bind_param("i", $deleteID);
 
-        if (mysqli_query($conn, $deleteSql)) {
+        if ($stmt->execute()) {
             echo "<p>Rij succesvol verwijderd.</p>";
         } else {
-            echo "<p>Fout bij verwijderen: " . mysqli_error($conn) . "</p>";
+            echo "<p>Fout bij verwijderen: " . $stmt->error . "</p>";
         }
+        $stmt->close();
     }
 
-    $result = mysqli_query($conn, "SELECT * FROM opdrachten");
+    $result = $conn->query("SELECT * FROM opdrachten");
     ?>
 
     <form method="post">
         <label for="klanten">Klant</label>
         <select name="klanten" id="klanten">
             <?php
-            $klantenResult = mysqli_query($conn, "SELECT * FROM klanten");
-            while ($klant = mysqli_fetch_assoc($klantenResult)) {
-                echo "<option value='" . $klant['ID'] . "'>" . $klant['Bedrijfsnaam'] . "</option>";
+            $klantenResult = $conn->query("SELECT * FROM klanten");
+            while ($klant = $klantenResult->fetch_assoc()) {
+                echo "<option value='" . $klant['ID'] . "'>" . htmlspecialchars($klant['Bedrijfsnaam']) . "</option>";
             }
             ?>
         </select>
@@ -199,7 +205,6 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
         <input type="text" id="benodigde_kennis" name="benodigde_kennis">
 
         <input type="submit" value="Toevoegen">
-        
     </form>
 
     <table>
@@ -214,24 +219,18 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
         </thead>
         <tbody>
         <?php
-        if ($result && mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $klant = isset($row['klant']) ? $row['klant'] : 'Onbekend';
-                $opdracht = isset($row['Opdrachten']) ? $row['Opdrachten'] : 'Geen opdracht';
-                $aanvraagdatum = isset($row['Aanvraagdatum']) ? $row['Aanvraagdatum'] : 'Geen datum';
-                $benodigdeKennis = isset($row['Benodigde kennis']) ? $row['Benodigde kennis'] : 'Geen kennis';
-
+        if ($result && $result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
                 echo "<tr>";
-                echo "<td>" . htmlspecialchars($klant) . "</td>";
+                echo "<td>" . htmlspecialchars($row['klant'] ?? 'Onbekend') . "</td>";
                 echo "<td>" . $row["opdrachten"] . "</td>";
-                echo "<td>" . htmlspecialchars($aanvraagdatum) . "</td>";
-                echo "<td>" . htmlspecialchars($benodigdeKennis) . "</td>";
+                echo "<td>" . htmlspecialchars($row['Aanvraagdatum'] ?? 'Geen datum') . "</td>";
+                echo "<td>" . htmlspecialchars($row['Benodigde kennis'] ?? 'Geen kennis') . "</td>";
                 echo "<td>";
                 echo "<a class='delete-button' href='?delete=" . $row['ID'] . "'>Verwijderen</a> ";
+                echo "<a class='update-button' href='update.php?id=" . $row['ID'] . "'>Bijwerken</a>";
                 echo "</td>";
                 echo "</tr>";
-
-               
             }
         } else {
             echo "<tr><td colspan='5'>Geen opdrachten gevonden.</td></tr>";
