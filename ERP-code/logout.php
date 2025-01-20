@@ -1,6 +1,7 @@
 <?php
 session_start();
-
-// Stuur de gebruiker terug naar de inlogpagina
-header('location:login_form.php');
+session_unset(); // Verwijdert alle sessievariabelen
+session_destroy(); // Vernietigt de sessie
+header("Location: index.html"); // Omleiden naar de loginpagina
+exit();
 ?>

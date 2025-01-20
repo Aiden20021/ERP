@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+// Controleer of de gebruiker is ingelogd als admin of medewerker
+if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
+    header('location:index.html'); 
+    exit();
+}
+?>
+
+
+<?php
 include 'db.php';
 
 // Maak een verbinding met de database
@@ -78,14 +89,14 @@ $conn->close();
         nav ul {
             list-style-type: none;
             margin: 0;
-            padding: 0;
+            padding: 5;
             display: flex;
             justify-content: center;
         }
         
         nav ul li {
             display: inline;
-            margin-right: 4cm; 
+            margin-right: 3cm; 
         }
         
         nav ul li a {

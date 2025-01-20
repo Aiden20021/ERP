@@ -29,21 +29,32 @@ if (!isset($_SESSION['admin_name']) && !isset($_SESSION['user_name'])) {
             justify-content: space-between;
             align-items: center;
         }
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
+        nav {
+            flex: 1;
             display: flex;
+            justify-content: center;
         }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 5;
+            display: flex;
+            justify-content: center;
+        }
+
         nav ul li {
-            margin-right: 30px;
+            display: inline;
+            margin-right: 3cm; /* Spatiëring van 4 cm */
         }
+
         nav ul li a {
             color: #fff;
             text-decoration: none;
-            font-size: 18px;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
+            font-size: 20px; /* Lettergrootte van 20 pixels */
         }
+
         nav ul li a:hover {
             color: #ccc;
         }
